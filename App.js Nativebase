@@ -1,0 +1,208 @@
+import React, { Component } from 'react';
+import { View, Dimensions, Image } from 'react-native';
+import { Container, Drawer, Header, Left, Body, Right, Button, Icon, Title, Content, Footer, FooterTab, Text, Card, CardItem, Fab } from 'native-base';
+import SideBar from './component/Sidebar';
+import ImageSlider from 'react-native-image-slider';
+import { Col, Row, Grid } from 'react-native-easy-grid';
+export default class App extends Component {
+  constructor(props){
+    super(props);
+    this.openDrawer = this.openDrawer.bind(this);
+    this.closeDrawer = this.closeDrawer.bind(this);
+    this.state = {
+      isReady: false,
+      position: 1,
+      interval: null,
+      active: 'false'
+    };
+    
+  }
+  
+  async componentWillMount() {
+    await Expo.Font.loadAsync({
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+      Ionicons: require("@expo/vector-icons/fonts/Ionicons.ttf")
+    });
+    this.setState({interval: setInterval(() => {
+      this.setState({position: this.state.position === 2 ? 0 : this.state.position + 1});
+    }, 2000)});
+    this.setState({ isReady: true });
+  }
+  componentWillUnmount() {
+    clearInterval(this.state.interval);
+  }
+  closeDrawer() {
+    this.drawer._root.close()
+  }
+  openDrawer() {
+    this.drawer._root.open()
+  }
+
+  renderGridmenu(){
+    return(
+      <Grid>
+        <Col>
+          <Row>
+            <Card>
+              <CardItem>
+                <Body>
+                  <Image source={{uri: 'https://xgolfer-com-apk-android-application-mobile.rembon.co.id/v101/images/icon-mobile/XCourse.png'}} style={{height: 50, width: 50, alignItems: 'center'}}/>
+                  <Text>
+                    X-Course
+                  </Text>
+                </Body>
+              </CardItem>
+            </Card>
+          </Row>
+          <Row>
+            <Card>
+              <CardItem>
+                <Body>
+                  <Image source={{uri: 'https://xgolfer-com-apk-android-application-mobile.rembon.co.id/v101/images/icon-mobile/XTournament.png'}} style={{height: 50, width: 50, alignItems: 'center'}}/>
+                  <Text>
+                    X-Tournament
+                  </Text>
+                </Body>
+              </CardItem>
+            </Card>
+          </Row>
+        </Col>
+        <Col>
+        <Row>
+        <Card>
+          <CardItem>
+            <Body>
+              <Image source={{uri: 'https://xgolfer-com-apk-android-application-mobile.rembon.co.id/v101/images/icon-mobile/XShop.png'}} style={{height: 50, width: 50, alignItems: 'center'}}/>
+              <Text>
+                X-Course
+              </Text>
+            </Body>
+          </CardItem>
+        </Card>
+      </Row>
+      <Row>
+        <Card>
+          <CardItem>
+            <Body>
+              <Image source={{uri: 'https://xgolfer-com-apk-android-application-mobile.rembon.co.id/v101/images/icon-mobile/XNearby.png'}} style={{height: 50, width: 50, alignItems: 'center'}}/>
+              <Text>
+                X-Tournament
+              </Text>
+            </Body>
+          </CardItem>
+        </Card>
+      </Row>
+        </Col>
+        <Col>
+        <Row>
+        <Card>
+          <CardItem>
+            <Body>
+              <Image source={{uri: 'https://xgolfer-com-apk-android-application-mobile.rembon.co.id/v101/images/icon-mobile/XDriving-Range.png'}} style={{height: 50, width: 50, alignItems: 'center'}}/>
+              <Text>
+                X-Course
+              </Text>
+            </Body>
+          </CardItem>
+        </Card>
+      </Row>
+      <Row>
+        <Card>
+          <CardItem>
+            <Body>
+              <Image source={{uri: 'https://xgolfer-com-apk-android-application-mobile.rembon.co.id/v101/images/icon-mobile/XGroup.png'}} style={{height: 50, width: 50, alignItems: 'center'}}/>
+              <Text>
+                X-Tournament
+              </Text>
+            </Body>
+          </CardItem>
+        </Card>
+      </Row>
+        </Col>
+      </Grid>
+    );
+  }
+  render() {
+    if(!this.state.isReady) {
+      return <Expo.AppLoading />;
+    }
+    return (
+      
+      <Drawer
+        ref={(ref) => { this.drawer = ref; }}
+        content={<SideBar/>}
+        onClose={() => this.closeDrawer()} >
+        <Container>
+          <Header>
+            <Left>
+              <Button transparent>
+                <Icon name='arrow-back' />
+              </Button>
+            </Left>
+            <Body>
+              <Title>Header</Title>
+            </Body>
+            <Right>
+              <Button transparent onPress={() => this.openDrawer()}>
+                <Icon name='menu' />
+              </Button>
+            </Right>
+          </Header>
+          <Content>
+            <ImageSlider
+                      images={[
+                          'https://image.tmdb.org/t/p/w780/o6OhxtsgMurL4h68Uqei0aSPMNr.jpg',
+                          'https://image.tmdb.org/t/p/w780/fn4n6uOYcB6Uh89nbNPoU2w80RV.jpg',
+                          'https://image.tmdb.org/t/p/w780/xWPXlLKSLGUNYzPqxDyhfij7bBi.jpg',
+                      ]}
+                      position={this.state.position}
+                      onPositionChanged={position => this.setState({position})}/>
+                      {this.renderGridmenu()}
+                  
+          </Content>
+          
+          <Footer>
+            
+          <FooterTab>
+            <Button>
+              <Icon name="apps" />
+            </Button>
+            <Button>
+              <Icon name="camera" />
+            </Button>
+            <Button active>
+              <Icon active name="navigate" />
+            </Button>
+            <Button>
+              <Icon name="person" />
+            </Button>
+          </FooterTab>
+        </Footer>
+        <Fab
+            active={this.state.active}
+            direction="up"
+            containerStyle={{ }}
+            style={{ backgroundColor: '#5067FF' }}
+            position="bottomRight"
+            onPress={() => this.setState({ active: !this.state.active })}>
+            <Icon name="share" />
+            <Button style={{ backgroundColor: '#34A34F' }}>
+              <Icon name="logo-whatsapp" />
+            </Button>
+            <Button style={{ backgroundColor: '#3B5998' }}>
+              <Icon name="logo-facebook" />
+            </Button>
+            <Button disabled style={{ backgroundColor: '#DD5144' }}>
+              <Icon name="mail" />
+            </Button>
+          </Fab>  
+        </Container>
+        
+          
+        
+      </Drawer>
+    );
+  }
+}
+
